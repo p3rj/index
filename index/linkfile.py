@@ -121,6 +121,7 @@ class LinkFile(object):
         # TODO If there's already a file name, shouldn't it be used?
         basename = filenamesanitizer.FilenameSanitizer(self.title)()
         # if verbose: print("+ {0}".format(basename))
+        # TODO Check for (unlikely?) name collisions, opposed to rewriting
         with open(os.path.join(target_folder, basename), 'w') as f:
             write_field(f, LinkFile.FIELD_URL, self.url)
             write_field(f, LinkFile.FIELD_TITLE, self.title)

@@ -64,6 +64,7 @@ class LinkFile(object):
             raise RuntimeError('Must specify either url or filename')
 
     def __getattr__(self, name):
+        """Provide access to some data fields by attribute reference."""
         if name == LinkFile.FIELD_URL:
             return self._data[LinkFile.FIELD_URL]
         if name == LinkFile.FIELD_TITLE:
@@ -71,6 +72,7 @@ class LinkFile(object):
         raise AttributeError(name)
 
     def __repr__(self):
+        """Return string representation of current instance."""
         if self._filename:
             return "LinkFile(filename='{0}')".format(self._filename)
         if self.url:
@@ -112,18 +114,19 @@ class LinkFile(object):
             self._data[LinkFile.FIELD_TAGS] = tags
         self._is_valid = True
 
-    def _save(self, target_folder):
+    def save(self, target_folder):
         def write_field(f, field, value):
             f.write('{0}{1}{2}\n'.format(field, LinkFile.SEPARATOR, value))
 
+        # TODO If there's already a file name, shouldn't it be used?
         basename = filenamesanitizer.FilenameSanitizer(self.title)()
         # if verbose: print("+ {0}".format(basename))
         with open(os.path.join(target_folder, basename), 'w') as f:
             write_field(f, LinkFile.FIELD_URL, self.url)
             write_field(f, LinkFile.FIELD_TITLE, self.title)
-            tags = self._data[LinkFile.FIELD_TAGS]
-            if tags:
-                write_field(f, LinkFile.FIELD_TAGS, tags)
+            if LinkFile.FIELD_TAGS in self._data:
+                write_field(
+                    f, LinkFile.FIELD_TAGS, self._data[LinkFile.FIELD_TAGS])
 
     def _contains_required_fields(self):
         """Return whether all required fields are defined for this link.

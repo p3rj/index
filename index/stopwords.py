@@ -2,7 +2,7 @@
     stopwords
     ~~~~~~~~~
 
-    This module provides a class to read manage stopwords.
+    This module provides a class to read and manage stopwords.
 
     :copyright: (c) 2016 by Peter Jahn
     :license:   BSD (see LICENSE for details)
@@ -27,5 +27,5 @@ class Stopwords(object):
                 if word: self.stopwords.add(word)
                 line = f.readline()
 
-    def contains(self, word):
+    def __contains__(self, word):
         return word in self.stopwords
